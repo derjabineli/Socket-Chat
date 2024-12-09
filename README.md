@@ -10,3 +10,5 @@ Socket Chat is a terminal based Chat app. It utilizes WebSockets to handle the c
 
 - Text Decoration and Styling
 - User to User chatting
+
+![Chat](./chat.png)
