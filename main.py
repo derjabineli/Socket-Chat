@@ -18,9 +18,14 @@ def process_data(key, mask, sel, connections):
     data = key.data
     if mask & selectors.EVENT_READ:
         try:
-            recv_data = sock.recv(1024)  # Should be ready to read
+            recv_data = sock.recv(1024)
+            print(recv_data)
             if recv_data:
                 data.outb += recv_data
+            else:
+                sel.unregister(sock)
+                connections.remove(sock)
+                sock.close()
         except:
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)
@@ -32,7 +37,11 @@ def process_data(key, mask, sel, connections):
                 if connection == sock:
                     continue
                 else:
-                    sent = connection.send(data.outb)  # Should be ready to write
+                    sent = connection.send(data.outb)
+                    if sent == 0:
+                        sel.unregister(connection)
+                        connection.close()
+                        connections.remove(connection)
             data.outb = b""
 
 def main():
